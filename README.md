@@ -2,6 +2,11 @@
 
 This project extracts the minimal required code from the Accumulate Wallet project to support `opIdResource.opIdInfo.adiInfo.bankOnLedger_Url()` functionality.
 
+## Next Steps
+Include Bank On Ledger fetch demo
+Host sample on OperateID web site
+ 
+
 ## Features
 
 - Generate BankOnLedger URLs from identity URLs
