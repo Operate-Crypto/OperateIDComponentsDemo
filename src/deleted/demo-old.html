@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdiParse Demo - BankOnLedger URL Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .example { background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .result { background: #e8f5e8; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .error { background: #ffe8e8; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        input[type="text"] { width: 300px; padding: 8px; margin: 5px; }
+        button { padding: 8px 15px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>AdiParse Demo - BankOnLedger URL Generator</h1>
+
+    <p>This utility extracts the minimal required code to generate BankOnLedger URLs from identity URLs.</p>
+
+    <div class="example">
+        <h3>Try it out:</h3>
+        <label>Identity URL: </label>
+        <input type="text" id="identityInput" value="sunstream.acme" placeholder="Enter identity (e.g., sunstream.acme)">
+        <button onclick="generateUrls()">Generate URLs</button>
+        <div id="result"></div>
+    </div>
+
+    <div class="example">
+        <h3>Network Settings:</h3>
+        <label>Network: </label>
+        <select id="networkSelect" onchange="changeNetwork()">
+            <option value="mainnet">Mainnet</option>
+            <option value="kermit">Kermit</option>
+            <option value="fozzie">Fozzie</option>
+        </select>
+        <span id="currentNetwork"></span>
+    </div>
+
+    <div class="example">
+        <h3>API Configuration:</h3>
+        <label>Development Mode: </label>
+        <input type="checkbox" id="devModeCheckbox" checked onchange="toggleDevMode()">
+        <span>Use mock data (uncheck to use real API)</span><br><br>
+
+        <label>Debug Mode: </label>
+        <input type="checkbox" id="debugModeCheckbox" checked onchange="toggleDebugMode()">
+        <span>Show detailed console logs (helps troubleshoot API issues)</span><br><br>
+
+        <label>API Base URL: </label>
+        <input type="text" id="apiBaseUrl" value="https://localhost:7033" placeholder="API Base URL">
+        <button onclick="updateApiUrl()">Update API URL</button><br>
+        <small style="color: #666;">Example: https://localhost:7033 or https://your-api-server.com</small><br>
+
+        <button onclick="clearAllCache()" style="margin-top: 10px;">Clear All Cache</button>
+
+        <div style="margin-top: 15px; padding: 10px; background: #fffacd; border-radius: 5px;">
+            <strong>Troubleshooting:</strong> Check browser console (F12) for detailed debug logs when debug mode is enabled.
+        </div>
+    </div>
+
+    <div class="example">
+        <h3>Example Usage in JavaScript:</h3>
+        <pre><code>// Get BankOnLedger URL
+const bankUrl = AdiParse.getBankOnLedgerUrl("sunstream.acme");
+console.log(bankUrl); // https://sunstream.BankOnLedger.com/?current-network=mainnet
+
+// Get Qoboto URL
+const qobotoUrl = AdiParse.getQobotoUrl("sunstream.acme");
+console.log(qobotoUrl); // https://sunstream.Qoboto.com/?current-network=mainnet
+
+// Get Logo URL (from API - automatically finds "main" section)
+const logoUrl = await AdiParse.getLogoUrl("sunstream.acme");
+console.log(logoUrl); // Real logo from Qoboto API
+
+// Get Description (from API - automatically finds "main" section)
+const description = await AdiParse.getSectionMain1Description("sunstream.acme");
+console.log(description); // Real description from API
+
+// Get Background Image URL (from API - automatically finds "main" section)
+const bgImageUrl = await AdiParse.getSectionMain1Background2ImageUrl("sunstream.acme");
+console.log(bgImageUrl); // Real background image from API
+
+// Get all data in one call (efficient)
+const allData = await AdiParse.getAllMainData("sunstream.acme");
+console.log(allData.logoUrl, allData.sectionMain1Description, allData.sectionMain1Background2ImageUrl);
+
+// Original chained method still works
+const resource = AdiParse.getOpIdResource("sunstream.acme");
+const logoUrl2 = await resource.logoUrl();
+const description2 = await resource.sectionMain1Description();
+const bgImage2 = await resource.sectionMain1Background2ImageUrl();
+
+// API Configuration
+AdiParse.setApiBaseUrl("https://your-api.com");
+AdiParse.setDevelopmentMode(false); // Use real API
+AdiParse.clearCache("sunstream.acme"); // Clear cache for specific identity
+
+// Note: The API returns a list of sections, but AdiParse automatically
+// finds the object with name="main" and extracts the required fields</code></pre>
+    </div>
+
+    <!-- Load all dependencies in correct order -->
+    <script src="NetworkNameService.js"></script>
+    <script src="IdentityFormatter.js"></script>
+    <script src="AdiStringHelper.js"></script>
+    <script src="AdiUrlClass.js"></script>
+    <script src="OpIdInfoClass.js"></script>
+    <script src="OpIdInfoFactory.js"></script>
+    <script src="QobotoApiService.js"></script>
+    <script src="OpIdResourceClass.js"></script>
+    <script src="OpIdResourceFactory.js"></script>
+    <script src="OpIdResourceRepository.js"></script>
+    <script src="OpIdService.js"></script>
+    <script src="AdiParse.js"></script>
+
+    <script>
+        async function generateUrls() {
+            const identityUrl = document.getElementById('identityInput').value;
+            const resultDiv = document.getElementById('result');
+
+            try {
+                resultDiv.innerHTML = '<div class="result">Loading data from API...</div>';
+
+                // Get all data in one efficient call
+                const allData = await AdiParse.getAllMainData(identityUrl);
+                const bankUrl = AdiParse.getBankOnLedgerUrl(identityUrl);
+                const qobotoUrl = AdiParse.getQobotoUrl(identityUrl);
+
+                if (allData && bankUrl && qobotoUrl) {
+                    resultDiv.innerHTML = `
+                        <div class="result">
+                            <div style="background-image: url('${allData.sectionMain1Background2ImageUrl}'); background-size: cover; background-position: center; padding: 20px; border-radius: 8px; margin-bottom: 15px; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">
+                                <strong>Background Image Preview</strong><br>
+                                <code style="background: rgba(0,0,0,0.5); padding: 2px 4px; border-radius: 3px;">${allData.sectionMain1Background2ImageUrl}</code>
+                            </div>
+
+                            <strong>Logo:</strong><br>
+                            <img src="${allData.logoUrl}" alt="Logo" style="width: 64px; height: 64px; border-radius: 8px; margin: 10px 0; border: 2px solid #ddd;"><br>
+                            <code>${allData.logoUrl}</code><br><br>
+
+                            <strong>Description:</strong><br>
+                            <p style="background: #f9f9f9; padding: 10px; border-radius: 5px; margin: 10px 0;">${allData.sectionMain1Description}</p>
+
+                            <strong>BankOnLedger URL:</strong><br>
+                            <a href="${bankUrl}" target="_blank">${bankUrl}</a><br><br>
+
+                            <strong>Qoboto URL:</strong><br>
+                            <a href="${qobotoUrl}" target="_blank">${qobotoUrl}</a><br><br>
+
+                            <details style="margin-top: 15px;">
+                                <summary style="cursor: pointer; font-weight: bold;">Raw API Data (Main Section)</summary>
+                                <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px; overflow-x: auto; margin: 10px 0;">${JSON.stringify(allData.rawData, null, 2)}</pre>
+                                <small style="color: #666;">Note: API returns a list of sections. This shows only the "main" section data.</small>
+                            </details>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = '<div class="error">Invalid identity URL format</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        function changeNetwork() {
+            const network = document.getElementById('networkSelect').value;
+            AdiParse.setNetwork(network);
+            updateCurrentNetwork();
+        }
+
+        function updateCurrentNetwork() {
+            document.getElementById('currentNetwork').textContent =
+                `(Current: ${AdiParse.getNetwork()})`;
+        }
+
+        function toggleDevMode() {
+            const isDevMode = document.getElementById('devModeCheckbox').checked;
+            AdiParse.setDevelopmentMode(isDevMode);
+            console.log(`Development mode: ${isDevMode ? 'enabled (mock data)' : 'disabled (real API)'}`);
+        }
+
+        function toggleDebugMode() {
+            const isDebugMode = document.getElementById('debugModeCheckbox').checked;
+            AdiParse.setDebugMode(isDebugMode);
+            console.log(`Debug mode: ${isDebugMode ? 'enabled' : 'disabled'}`);
+        }
+
+        function updateApiUrl() {
+            const apiUrl = document.getElementById('apiBaseUrl').value;
+            if (apiUrl.trim()) {
+                AdiParse.setApiBaseUrl(apiUrl);
+                console.log(`API base URL updated to: ${apiUrl}`);
+                alert(`API base URL updated to: ${apiUrl}`);
+            }
+        }
+
+        function clearAllCache() {
+            AdiParse.clearCache();
+            console.log('All cache cleared');
+            alert('All cache cleared');
+        }
+
+        // Initialize
+        updateCurrentNetwork();
+
+        // Test the example from the requirements
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('=== AdiParse Demo Test ===');
+            console.log('BankOnLedger URL for sunstream.acme:', AdiParse.getBankOnLedgerUrl('sunstream.acme'));
+            console.log('Qoboto URL for sunstream.acme:', AdiParse.getQobotoUrl('sunstream.acme'));
+
+            // Test all new API data methods
+            console.log('--- Testing API Data Methods ---');
+            const logoUrl = await AdiParse.getLogoUrl('sunstream.acme');
+            console.log('Logo URL:', logoUrl);
+
+            const description = await AdiParse.getSectionMain1Description('sunstream.acme');
+            console.log('Description:', description);
+
+            const backgroundImageUrl = await AdiParse.getSectionMain1Background2ImageUrl('sunstream.acme');
+            console.log('Background Image URL:', backgroundImageUrl);
+
+            // Test getting all data in one call
+            console.log('--- Testing getAllMainData ---');
+            const allData = await AdiParse.getAllMainData('sunstream.acme');
+            console.log('All Main Data:', allData);
+
+            // Test the original chained access method
+            console.log('--- Testing Original Chained Methods ---');
+            const opIdResource = AdiParse.getOpIdResource('sunstream.acme');
+            if (opIdResource) {
+                console.log('bankOnLedger_Url():', opIdResource.opIdInfo.adiInfo.bankOnLedger_Url());
+                console.log('logoUrl():', await opIdResource.logoUrl());
+                console.log('sectionMain1Description():', await opIdResource.sectionMain1Description());
+                console.log('sectionMain1Background2ImageUrl():', await opIdResource.sectionMain1Background2ImageUrl());
+            }
+
+            console.log('=== Demo Test Complete ===');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/OperateCrypto/DevOps/AccumulateWallet/BlockchainQA/WalletMain/wwwroot/**)",
+      "Bash(cat:*)",
+      "Bash(dir:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

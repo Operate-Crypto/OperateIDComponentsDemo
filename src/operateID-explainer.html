@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OperateID - Decentralized Digital Identity Platform</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #4F46E5;
+            --secondary-color: #7C3AED;
+            --accent-color: #06B6D4;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --dark-bg: #1F2937;
+            --light-bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text-dark: #111827;
+            --text-light: #6B7280;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo-container {
+            margin: 0 auto 30px;
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-container img {
+            width: 80px;
+            height: auto;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .hero-badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .badge-item {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .section {
+            padding: 60px 40px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 50px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid #E5E7EB;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon.primary { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); }
+        .feature-icon.success { background: linear-gradient(135deg, var(--success-color), #34D399); }
+        .feature-icon.warning { background: linear-gradient(135deg, var(--warning-color), #FBBF24); }
+        .feature-icon.accent { background: linear-gradient(135deg, var(--accent-color), #22D3EE); }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .feature-description {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .pricing-section {
+            background: var(--light-bg);
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary-color);
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(79, 70, 229, 0.2);
+        }
+
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .price-subtitle {
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 30px;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-list li i {
+            color: var(--success-color);
+            margin-right: 10px;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .step-card {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0 auto 20px;
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .step-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .tech-specs {
+            background: var(--dark-bg);
+            color: white;
+        }
+
+        .tech-specs .section-title,
+        .tech-specs .section-subtitle {
+            color: white;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .tech-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .tech-item h4 {
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .footer-section {
+            background: var(--text-dark);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .section {
+                padding: 40px 20px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.featured {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="logo-container">
+                    <img src="logo/image.png" alt="OperateID Logo">
+                </div>
+                <h1 class="hero-title">OperateID</h1>
+                <p class="hero-subtitle">Decentralized Digital Identity Platform for the Blockchain Era</p>
+                <p style="font-size: 1.1rem; opacity: 0.9;">Create, manage, and control your digital identity with unprecedented security and ownership</p>
+
+                <div class="hero-badges">
+                    <span class="badge-item"><i class="fas fa-shield-alt"></i> Blockchain Secured</span>
+                    <span class="badge-item"><i class="fas fa-coins"></i> 10¢ Setup Cost</span>
+                    <span class="badge-item"><i class="fas fa-code"></i> JavaScript Powered</span>
+                    <span class="badge-item"><i class="fas fa-users"></i> Multi-Signature</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- What is OperateID Section -->
+        <section class="section">
+            <h2 class="section-title">What is OperateID?</h2>
+            <p class="section-subtitle">
+                OperateID is a revolutionary combination key that merges your Identity URL, Ethereum address, and Accumulate key into a single, secure, blockchain-based digital identity.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon primary">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <h3 class="feature-title">Algorithmic Generation</h3>
+                    <p class="feature-description">
+                        Your OperateID is algorithmically created using simple programming languages like JavaScript. The combination of Identity URL + Ethereum Address + Accumulate Key creates a unique, cryptographically secure identifier.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon success">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3 class="feature-title">Easy Setup</h3>
+                    <p class="feature-description">
+                        Download the wallet from <strong>OperateCrypto.com</strong> and create your OperateID in minutes. No complex technical knowledge required - the process is streamlined and user-friendly.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon warning">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h3 class="feature-title">Ultra-Low Cost</h3>
+                    <p class="feature-description">
+                        Create your complete digital identity ecosystem for under <strong>20 ACME tokens</strong> (approximately 10 cents total). Free faucets are available to get you started with free ACME tokens.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- DID Assets Section -->
+        <section class="section" style="background: var(--light-bg);">
+            <h2 class="section-title">DID Assets You Can Create</h2>
+            <p class="section-subtitle">
+                Once you have your OperateID, unlock powerful decentralized applications and services built on blockchain technology.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon accent">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="feature-title">Qoboto.com - Blockchain Website Builder</h3>
+                    <p class="feature-description">
+                        Like LinkTree, but built on blockchain technology. While LinkTree creates websites with traditional SaaS authority, <strong>Qoboto.com</strong> creates them on the blockchain where trust is inherently high and ownership is guaranteed.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon primary">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <h3 class="feature-title">BankOnLedger.com - Name Services</h3>
+                    <p class="feature-description">
+                        Similar to Ethereum Name Services (ENS), <strong>BankOnLedger.com</strong> provides human-readable names for your blockchain addresses and creates a professional financial identity on the ledger.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section class="section pricing-section">
+            <h2 class="section-title">Transparent Pricing</h2>
+            <p class="section-subtitle">
+                Get started with blockchain identity for less than the cost of a cup of coffee
+            </p>
+
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="pricing-card featured">
+                        <div class="price">$0.10</div>
+                        <p class="price-subtitle">Complete OperateID Setup</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> OperateID Creation</li>
+                            <li><i class="fas fa-check"></i> Qoboto.com Website</li>
+                            <li><i class="fas fa-check"></i> BankOnLedger.com Name</li>
+                            <li><i class="fas fa-check"></i> Under 20 ACME Tokens</li>
+                            <li><i class="fas fa-check"></i> Free ACME from Faucets</li>
+                            <li><i class="fas fa-check"></i> Multi-Signature Support</li>
+                        </ul>
+                        <a href="https://OperateCrypto.com" class="cta-button">Download Wallet</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Management Features Section -->
+        <section class="section">
+            <h2 class="section-title">Advanced Management Features</h2>
+            <p class="section-subtitle">
+                Scale your digital identity with enterprise-grade management tools
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon success">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">Multi-Signature Control</h3>
+                    <p class="feature-description">
+                        Add other users to manage your digital assets with multi-signature security. Perfect for teams, organizations, and shared ownership scenarios.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon primary">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h3 class="feature-title">Free User Registration</h3>
+                    <p class="feature-description">
+                        Register with <strong>OperateID.com</strong> as a user completely free. Gain access to advanced management tools and collaborative features.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon accent">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h3 class="feature-title">Business Network Creation</h3>
+                    <p class="feature-description">
+                        Create your own business network on the Operate Network at no cost. Invite people, grow your network, and list your products and services.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="section" style="background: var(--light-bg);">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">
+                Get started with your decentralized digital identity in simple steps
+            </p>
+
+            <div class="workflow-steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h4 class="step-title">Download Wallet</h4>
+                    <p class="step-description">Visit OperateCrypto.com and download the official wallet application</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h4 class="step-title">Create OperateID</h4>
+                    <p class="step-description">Generate your unique combination key using JavaScript algorithms</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h4 class="step-title">Fund with ACME</h4>
+                    <p class="step-description">Get 20 ACME tokens from faucets or purchase for ~10 cents</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h4 class="step-title">Create DID Assets</h4>
+                    <p class="step-description">Set up Qoboto.com website and BankOnLedger.com name service</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">5</div>
+                    <h4 class="step-title">Register & Manage</h4>
+                    <p class="step-description">Register free at OperateID.com for advanced management features</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">6</div>
+                    <h4 class="step-title">Build Network</h4>
+                    <p class="step-description">Create business networks, invite users, and list products</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Specifications Section -->
+        <section class="section tech-specs">
+            <h2 class="section-title">Technical Foundation</h2>
+            <p class="section-subtitle">
+                Built on proven blockchain technology with modern development practices
+            </p>
+
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <h4><i class="fas fa-code"></i> JavaScript Integration</h4>
+                    <p>Simple algorithmic creation using standard JavaScript libraries and cryptographic functions.</p>
+                </div>
+
+                <div class="tech-item">
+                    <h4><i class="fab fa-ethereum"></i> Ethereum Compatible</h4>
+                    <p>Seamlessly integrates with Ethereum addresses and ecosystem for maximum compatibility.</p>
+                </div>
+
+                <div class="tech-item">
+                    <h4><i class="fas fa-link"></i> Accumulate Network</h4>
+                    <p>Leverages Accumulate blockchain for secure, scalable identity management and verification.</p>
+                </div>
+
+                <div class="tech-item">
+                    <h4><i class="fas fa-shield-alt"></i> Cryptographic Security</h4>
+                    <p>Military-grade cryptographic hashing ensures your identity keys are secure and tamper-proof.</p>
+                </div>
+
+                <div class="tech-item">
+                    <h4><i class="fas fa-globe"></i> Decentralized Infrastructure</h4>
+                    <p>No single point of failure - your identity exists across a distributed blockchain network.</p>
+                </div>
+
+                <div class="tech-item">
+                    <h4><i class="fas fa-users-cog"></i> Multi-Signature Support</h4>
+                    <p>Enterprise-grade multi-signature capabilities for shared control and enhanced security.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action Section -->
+        <section class="section">
+            <div class="text-center">
+                <h2 class="section-title">Ready to Own Your Digital Identity?</h2>
+                <p class="section-subtitle">
+                    Join thousands of users who have taken control of their digital presence with OperateID
+                </p>
+                <div class="mt-4">
+                    <a href="https://OperateCrypto.com" class="cta-button me-3 mb-2">
+                        <i class="fas fa-download"></i> Download Wallet
+                    </a>
+                    <a href="https://OperateID.com" class="cta-button mb-2">
+                        <i class="fas fa-user-plus"></i> Register Free
+                    </a>
+                </div>
+                <p class="mt-3 text-muted">
+                    <small><i class="fas fa-shield-alt"></i> Secured by blockchain technology | <i class="fas fa-coins"></i> Costs less than 10 cents</small>
+                </p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer-section">
+            <div class="footer-links">
+                <a href="https://OperateID.com">OperateID.com</a>
+                <a href="https://OperateCrypto.com">OperateCrypto.com</a>
+                <a href="https://Qoboto.com">Qoboto.com</a>
+                <a href="https://BankOnLedger.com">BankOnLedger.com</a>
+            </div>
+            <p>&copy; 2024 OperateID. Empowering digital identity ownership through blockchain technology.</p>
+            <p style="font-size: 0.9rem; opacity: 0.8;">
+                Built with for a decentralized future
+            </p>
+        </footer>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

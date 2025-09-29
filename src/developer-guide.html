@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OperateID Developer Guide - Technical Documentation</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Prism.js for syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #4F46E5;
+            --secondary-color: #7C3AED;
+            --accent-color: #06B6D4;
+            --success-color: #10B981;
+            --code-bg: #1F2937;
+            --dark-bg: #111827;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            line-height: 1.6;
+        }
+
+        .container-custom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar ul li a {
+            color: #333;
+            text-decoration: none;
+            display: block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .sidebar ul li a:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .content-section h2 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .content-section h3 {
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .code-header {
+            background: rgba(0,0,0,0.3);
+            padding: 10px 15px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        pre {
+            margin: 0 !important;
+            padding: 20px !important;
+            border-radius: 0 0 8px 8px !important;
+        }
+
+        .info-box {
+            background: #E0F2FE;
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .info-box.warning {
+            background: #FEF3C7;
+            border-left-color: #F59E0B;
+        }
+
+        .info-box.success {
+            background: #D1FAE5;
+            border-left-color: var(--success-color);
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .data-flow {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .flow-number {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: white;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 15px;
+        }
+
+        .live-demo {
+            background: #F9FAFB;
+            border: 2px dashed var(--accent-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .live-demo h4 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .demo-input {
+            margin-bottom: 15px;
+        }
+
+        .demo-input input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+
+        .demo-output {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            min-height: 100px;
+        }
+
+        .api-table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+        .api-table th {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .api-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .api-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .badge-custom {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-right: 5px;
+        }
+
+        .badge-async {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge-sync {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-code"></i> OperateID Developer Guide</h1>
+        <p>Step-by-step technical guide for integrating OperateID Components</p>
+    </div>
+
+    <div class="container-custom">
+        <div class="row">
+            <!-- Sidebar Navigation -->
+            <div class="col-lg-3">
+                <div class="sidebar">
+                    <h3><i class="fas fa-list"></i> Contents</h3>
+                    <ul>
+                        <li><a href="#overview">Overview</a></li>
+                        <li><a href="#installation">Installation</a></li>
+                        <li><a href="#architecture">Architecture</a></li>
+                        <li><a href="#quick-start">Quick Start</a></li>
+                        <li><a href="#data-flow">Data Flow</a></li>
+                        <li><a href="#api-reference">API Reference</a></li>
+                        <li><a href="#fetching-data">Fetching Data</a></li>
+                        <li><a href="#rendering">Rendering UI</a></li>
+                        <li><a href="#complete-example">Complete Example</a></li>
+                        <li><a href="#best-practices">Best Practices</a></li>
+                        <li><a href="#troubleshooting">Troubleshooting</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <!-- Overview Section -->
+                <div class="content-section" id="overview">
+                    <h2><i class="fas fa-info-circle"></i> Overview</h2>
+                    <p>
+                        The OperateID Components library provides a pure JavaScript solution for fetching and displaying blockchain identity data.
+                        It integrates with the Accumulate blockchain and Qoboto API to retrieve identity information including logos, descriptions, and background images.
+                    </p>
+
+                    <div class="info-box success">
+                        <strong><i class="fas fa-check-circle"></i> What You'll Learn</strong>
+                        <ul class="mb-0">
+                            <li>How to include and initialize the library</li>
+                            <li>How to fetch identity data from the blockchain</li>
+                            <li>How to render fetched data in HTML</li>
+                            <li>How to handle errors and edge cases</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Installation Section -->
+                <div class="content-section" id="installation">
+                    <h2><i class="fas fa-download"></i> Installation</h2>
+
+                    <h3>Method 1: Single Combined File (Recommended)</h3>
+                    <p>Include the complete OperateID assembly in your HTML:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>HTML</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;My OperateID App&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- Your content here --&gt;
+
+    &lt;!-- Include OperateID Components --&gt;
+    &lt;script src="src/js/operateIdAssembly.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                    </div>
+
+                    <h3>Method 2: Individual Files</h3>
+                    <p>If you need more control, include files in this exact order:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>HTML - Load order is critical!</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code class="language-html">&lt;script src="NetworkNameService.js"&gt;&lt;/script&gt;
+&lt;script src="IdentityFormatter.js"&gt;&lt;/script&gt;
+&lt;script src="AdiStringHelper.js"&gt;&lt;/script&gt;
+&lt;script src="AdiUrlClass.js"&gt;&lt;/script&gt;
+&lt;script src="OpIdInfoClass.js"&gt;&lt;/script&gt;
+&lt;script src="OpIdInfoFactory.js"&gt;&lt;/script&gt;
+&lt;script src="QobotoApiService.js"&gt;&lt;/script&gt;
+&lt;script src="OpIdResourceClass.js"&gt;&lt;/script&gt;
+&lt;script src="OpIdResourceFactory.js"&gt;&lt;/script&gt;
+&lt;script src="OpIdResourceRepository.js"&gt;&lt;/script&gt;
+&lt;script src="OpIdService.js"&gt;&lt;/script&gt;
+&lt;script src="AdiParse.js"&gt;&lt;/script&gt;</code></pre>
+                    </div>
+                </div>
+
+                <!-- Architecture Section -->
+                <div class="content-section" id="architecture">
+                    <h2><i class="fas fa-project-diagram"></i> Architecture</h2>
+
+                    <p>The library follows a layered architecture pattern:</p>
+
+                    <div class="data-flow">
+                        <div class="flow-step">
+                            <div class="flow-number">1</div>
+                            <div><strong>AdiParse API Layer</strong> - Simple, user-facing methods</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">2</div>
+                            <div><strong>Service Layer</strong> - OpIdService coordinates resources</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">3</div>
+                            <div><strong>Resource Layer</strong> - OpIdResource manages data and caching</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">4</div>
+                            <div><strong>API Layer</strong> - QobotoApiService fetches from blockchain</div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-number">5</div>
+                            <div><strong>Utility Layer</strong> - URL parsing, formatting, network config</div>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <strong><i class="fas fa-lightbulb"></i> Design Pattern</strong>
+                        Uses Factory, Repository, and Service patterns for clean separation of concerns and testability.
+                    </div>
+                </div>
+
+                <!-- Quick Start Section -->
+                <div class="content-section" id="quick-start">
+                    <h2><i class="fas fa-rocket"></i> Quick Start</h2>
+
+                    <p>Get started in 3 simple steps:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>JavaScript - Your first OperateID integration</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code class="language-javascript">// Step 1: Configure the API (optional - has smart defaults)
+AdiParse.setApiBaseUrl("https://localhost:7033");
+AdiParse.setDevelopmentMode(false); // Set to false for real API
+AdiParse.setDebugMode(true); // Enable logging
+
+// Step 2: Generate URLs (synchronous)
+const bankUrl = AdiParse.getBankOnLedgerUrl("sunstream.acme");
+const qobotoUrl = AdiParse.getQobotoUrl("sunstream.acme");
+console.log(bankUrl);   // https://sunstream.BankOnLedger.com/?current-network=mainnet
+console.log(qobotoUrl); // https://sunstream.Qoboto.com/?current-network=mainnet
+
+// Step 3: Fetch data from blockchain (asynchronous)
+async function loadIdentityData() {
+    const data = await AdiParse.getAllMainData("sunstream.acme");
+    console.log("Logo:", data.logoUrl);
+    console.log("Description:", data.sectionMain1Description);
+    console.log("Background:", data.sectionMain1Background2ImageUrl);
+}
+
+loadIdentityData();</code></pre>
+                    </div>
+                </div>
+
+                <!-- Data Flow Section -->
+                <div class="content-section" id="data-flow">
+                    <h2><i class="fas fa-exchange-alt"></i> Data Flow: How It Works</h2>
+
+                    <h3>Understanding the Request Flow</h3>
+                    <p>When you call <code>AdiParse.getAllMainData("sunstream.acme")</code>, here's what happens:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Step-by-Step Execution Flow</span>
+                        </div>
+                        <pre><code class="language-javascript">// 1. INPUT: Your code calls the API
+await AdiParse.getAllMainData("sunstream.acme")
+
+// 2. FORMATTING: Identity URL is formatted
+// "sunstream.acme" → "acc://sunstream.acme"
+identityFormatter.formatIdentity()
+
+// 3. RESOURCE CREATION: OpIdResource is created with parsed identity
+opIdResourceFactory.createByIdentityUrl()
+  → opIdInfoFactory.createByIdentityUrl()
+    → Parse: acc://sunstream.acme → name="sunstream"
+
+// 4. API CALL: HTTP request to Qoboto API
+GET https://localhost:7033/api/v1/Qoboto/GetDataValue/All?DataAccountUrl=sunstream.acme
+
+// 5. RESPONSE PARSING: API returns array of sections
+[
+  { name: "header", ... },
+  { name: "main", logoUrl: "...", sectionMain1Description: "...", ... },
+  { name: "footer", ... }
+]
+
+// 6. SECTION EXTRACTION: Find object with name="main"
+_findMainSection() → returns main section object
+
+// 7. TEXT CLEANING: Remove problematic characters
+_cleanText() → removes "�" characters, fixes encoding
+
+// 8. CACHING: Store result for 5 minutes
+cache.set("qoboto_sunstream.acme", { data, timestamp })
+
+// 9. OUTPUT: Return cleaned data to your code
+{
+  logoUrl: "https://example.com/logo.png",
+  sectionMain1Description: "Welcome to Sunstream...",
+  sectionMain1Background2ImageUrl: "https://example.com/bg.jpg",
+  rawData: { ... }
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- API Reference Section -->
+                <div class="content-section" id="api-reference">
+                    <h2><i class="fas fa-book"></i> API Reference</h2>
+
+                    <h3>Core Methods</h3>
+
+                    <table class="api-table">
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Type</th>
+                                <th>Returns</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>getBankOnLedgerUrl(identityUrl)</code></td>
+                                <td><span class="badge-custom badge-sync">Sync</span></td>
+                                <td>string | null</td>
+                                <td>Generate BankOnLedger URL</td>
+                            </tr>
+                            <tr>
+                                <td><code>getQobotoUrl(identityUrl)</code></td>
+                                <td><span class="badge-custom badge-sync">Sync</span></td>
+                                <td>string | null</td>
+                                <td>Generate Qoboto URL</td>
+                            </tr>
+                            <tr>
+                                <td><code>getLogoUrl(identityUrl)</code></td>
+                                <td><span class="badge-custom badge-async">Async</span></td>
+                                <td>Promise&lt;string | null&gt;</td>
+                                <td>Fetch logo URL from API</td>
+                            </tr>
+                            <tr>
+                                <td><code>getSectionMain1Description(identityUrl)</code></td>
+                                <td><span class="badge-custom badge-async">Async</span></td>
+                                <td>Promise&lt;string | null&gt;</td>
+                                <td>Fetch description from API</td>
+                            </tr>
+                            <tr>
+                                <td><code>getSectionMain1Background2ImageUrl(identityUrl)</code></td>
+                                <td><span class="badge-custom badge-async">Async</span></td>
+                                <td>Promise&lt;string | null&gt;</td>
+                                <td>Fetch background image URL</td>
+                            </tr>
+                            <tr>
+                                <td><code>getAllMainData(identityUrl)</code></td>
+                                <td><span class="badge-custom badge-async">Async</span></td>
+                                <td>Promise&lt;object&gt;</td>
+                                <td>Fetch all data in one call (efficient)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Configuration Methods</h3>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>JavaScript - Configuration API</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code class="language-javascript">// Network configuration
+AdiParse.setNetwork("mainnet");  // "mainnet", "kermit", "fozzie"
+const network = AdiParse.getNetwork(); // Returns current network
+
+// API configuration
+AdiParse.setApiBaseUrl("https://localhost:7033");
+
+// Development mode (uses mock data)
+AdiParse.setDevelopmentMode(true);  // Mock data for testing
+AdiParse.setDevelopmentMode(false); // Real API calls
+
+// Debug logging
+AdiParse.setDebugMode(true);  // Enable detailed console logs
+AdiParse.setDebugMode(false); // Quiet mode
+
+// Cache management
+AdiParse.clearCache("sunstream.acme"); // Clear specific identity
+AdiParse.clearCache();                 // Clear all cached data</code></pre>
+                    </div>
+                </div>
+
+                <!-- Fetching Data Section -->
+                <div class="content-section" id="fetching-data">
+                    <h2><i class="fas fa-cloud-download-alt"></i> Fetching Data from Blockchain</h2>
+
+                    <h3>Method 1: Individual Calls</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>JavaScript - Fetch each piece separately</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code class="language-javascript">async function fetchIndividualData(identityUrl) {
+    try {
+        // Fetch logo
+        const logoUrl = await AdiParse.getLogoUrl(identityUrl);
+        console.log("Logo:", logoUrl);
+
+        // Fetch description
+        const description = await AdiParse.getSectionMain1Description(identityUrl);
+        console.log("Description:", description);
+
+        // Fetch background image
+        const bgImage = await AdiParse.getSectionMain1Background2ImageUrl(identityUrl);
+        console.log("Background:", bgImage);
+
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+}
+
+fetchIndividualData("sunstream.acme");</code></pre>
+                    </div>
+
+                    <h3>Method 2: Batch Call (Recommended)</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>JavaScript - Fetch all data in one API call</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code class="language-javascript">async function fetchAllData(identityUrl) {
+    try {
+        // Single API call - much more efficient!
+        const data = await AdiParse.getAllMainData(identityUrl);
+
+        // All data is now available
+        console.log("Logo:", data.logoUrl);
+        console.log("Description:", data.sectionMain1Description);
+        console.log("Background:", data.sectionMain1Background2ImageUrl);
+        console.log("Raw API Data:", data.rawData);
+
+        return data;
+
+    } catch (error) {
+        console.error("Error fetching all data:", error);
+        return null;
+    }
+}
+
+fetchAllData("sunstream.acme");</code></pre>
+                    </div>
+
+                    <div class="info-box warning">
+                        <strong><i class="fas fa-exclamation-triangle"></i> Performance Tip</strong>
+                        Always use <code>getAllMainData()</code> instead of individual calls. It makes only ONE API request and is cached for 5 minutes.
+                    </div>
+                </div>
+
+                <!-- Rendering Section -->
+                <div class="content-section" id="rendering">
+                    <h2><i class="fas fa-paint-brush"></i> Rendering Data in HTML</h2>
+
+                    <h3>Step-by-Step Rendering Process</h3>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>JavaScript - Complete fetch and render example</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code class="language-javascript">async function displayIdentityCard(identityUrl) {
+    // 1. Get container element
+    const container = document.getElementById('identity-container');
+
+    // 2. Show loading state
+    container.innerHTML = '&lt;div class="loading"&gt;Loading...&lt;/div&gt;';
+
+    try {
+        // 3. Fetch all data from blockchain
+        const data = await AdiParse.getAllMainData(identityUrl);
+
+        // 4. Generate URLs
+        const bankUrl = AdiParse.getBankOnLedgerUrl(identityUrl);
+        const qobotoUrl = AdiParse.getQobotoUrl(identityUrl);
+
+        // 5. Extract identity name
+        const identityName = identityUrl.split('.')[0].replace('acc://', '');
+
+        // 6. Build HTML with fetched data
+        const html = `
+            &lt;div class="identity-card"&gt;
+                &lt;!-- Logo Section --&gt;
+                &lt;div class="card-header"&gt;
+                    &lt;img src="${data.logoUrl}"
+                         alt="${identityName} logo"
+                         onerror="this.src='fallback-logo.png'"&gt;
+                    &lt;h2&gt;${identityName}&lt;/h2&gt;
+                &lt;/div&gt;
+
+                &lt;!-- Links Section --&gt;
+                &lt;div class="card-links"&gt;
+                    &lt;a href="${qobotoUrl}" target="_blank"&gt;
+                        Visit Qoboto Site
+                    &lt;/a&gt;
+                    &lt;a href="${bankUrl}" target="_blank"&gt;
+                        Bank on Ledger
+                    &lt;/a&gt;
+                &lt;/div&gt;
+
+                &lt;!-- Background Image Section --&gt;
+                &lt;div class="card-background"
+                     style="background-image: url('${data.sectionMain1Background2ImageUrl}')"&gt;
+                &lt;/div&gt;
+
+                &lt;!-- Description Section --&gt;
+                &lt;div class="card-description"&gt;
+                    &lt;p&gt;${data.sectionMain1Description}&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        `;
+
+        // 7. Inject HTML into DOM
+        container.innerHTML = html;
+
+    } catch (error) {
+        // 8. Handle errors gracefully
+        container.innerHTML = `
+            &lt;div class="error"&gt;
+                Failed to load identity data: ${error.message}
+            &lt;/div&gt;
+        `;
+        console.error("Rendering error:", error);
+    }
+}
+
+// Call the function
+displayIdentityCard("sunstream.acme");</code></pre>
+                    </div>
+
+                    <h3>Dynamic Content Updates</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>JavaScript - Update specific elements</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code class="language-javascript">async function updateIdentityElements(identityUrl) {
+    const data = await AdiParse.getAllMainData(identityUrl);
+
+    // Update individual DOM elements
+    document.getElementById('logo').src = data.logoUrl;
+    document.getElementById('description').textContent = data.sectionMain1Description;
+    document.getElementById('background').style.backgroundImage =
+        `url('${data.sectionMain1Background2ImageUrl}')`;
+
+    // Update URLs
+    const bankUrl = AdiParse.getBankOnLedgerUrl(identityUrl);
+    const qobotoUrl = AdiParse.getQobotoUrl(identityUrl);
+
+    document.getElementById('bank-link').href = bankUrl;
+    document.getElementById('qoboto-link').href = qobotoUrl;
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Complete Example Section -->
+                <div class="content-section" id="complete-example">
+                    <h2><i class="fas fa-file-code"></i> Complete Working Example</h2>
+
+                    <p>Here's a complete, production-ready HTML file:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>HTML + JavaScript - Full working example</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Identity Viewer&lt;/title&gt;
+    &lt;style&gt;
+        .identity-card {
+            max-width: 600px;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .card-header img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+        .card-links {
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .card-links a {
+            flex: 1;
+            padding: 10px;
+            background: #4F46E5;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .card-background {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+        .card-description {
+            padding: 20px;
+            background: #f9f9f9;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .error {
+            padding: 20px;
+            background: #fee;
+            color: #c00;
+            border: 1px solid #fcc;
+            border-radius: 5px;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="identity-container"&gt;&lt;/div&gt;
+
+    &lt;!-- Load OperateID Components --&gt;
+    &lt;script src="src/js/operateIdAssembly.js"&gt;&lt;/script&gt;
+
+    &lt;script&gt;
+        // Configure API
+        AdiParse.setApiBaseUrl("https://localhost:7033");
+        AdiParse.setDevelopmentMode(false);
+        AdiParse.setDebugMode(true);
+
+        // Main function
+        async function displayIdentityCard(identityUrl) {
+            const container = document.getElementById('identity-container');
+            container.innerHTML = '&lt;div class="loading"&gt;Loading identity data...&lt;/div&gt;';
+
+            try {
+                // Fetch data
+                const data = await AdiParse.getAllMainData(identityUrl);
+                const bankUrl = AdiParse.getBankOnLedgerUrl(identityUrl);
+                const qobotoUrl = AdiParse.getQobotoUrl(identityUrl);
+                const name = identityUrl.split('.')[0].replace('acc://', '');
+
+                // Render HTML
+                container.innerHTML = `
+                    &lt;div class="identity-card"&gt;
+                        &lt;div class="card-header"&gt;
+                            &lt;img src="${data.logoUrl}" alt="${name}"&gt;
+                            &lt;h2&gt;${name}&lt;/h2&gt;
+                        &lt;/div&gt;
+                        &lt;div class="card-links"&gt;
+                            &lt;a href="${qobotoUrl}" target="_blank"&gt;Qoboto&lt;/a&gt;
+                            &lt;a href="${bankUrl}" target="_blank"&gt;BankOnLedger&lt;/a&gt;
+                        &lt;/div&gt;
+                        &lt;div class="card-background"
+                             style="background-image: url('${data.sectionMain1Background2ImageUrl}')"&gt;
+                        &lt;/div&gt;
+                        &lt;div class="card-description"&gt;
+                            ${data.sectionMain1Description}
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                `;
+            } catch (error) {
+                container.innerHTML = `
+                    &lt;div class="error"&gt;Error: ${error.message}&lt;/div&gt;
+                `;
+            }
+        }
+
+        // Load on page ready
+        displayIdentityCard("sunstream.acme");
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                    </div>
+                </div>
+
+                <!-- Best Practices Section -->
+                <div class="content-section" id="best-practices">
+                    <h2><i class="fas fa-star"></i> Best Practices</h2>
+
+                    <h3>1. Error Handling</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>JavaScript - Robust error handling</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code class="language-javascript">async function safeDataFetch(identityUrl) {
+    try {
+        const data = await AdiParse.getAllMainData(identityUrl);
+
+        // Check if data is valid
+        if (!data || !data.logoUrl) {
+            throw new Error("Invalid or incomplete data received");
+        }
+
+        return data;
+
+    } catch (error) {
+        console.error("Data fetch failed:", error);
+
+        // Return fallback data
+        return {
+            logoUrl: "default-logo.png",
+            sectionMain1Description: "Identity data unavailable",
+            sectionMain1Background2ImageUrl: "default-bg.jpg"
+        };
+    }
+}</code></pre>
+                    </div>
+
+                    <h3>2. Performance Optimization</h3>
+                    <div class="info-box success">
+                        <strong><i class="fas fa-check-circle"></i> Best Practices</strong>
+                        <ul class="mb-0">
+                            <li>Use <code>getAllMainData()</code> instead of multiple individual calls</li>
+                            <li>Data is automatically cached for 5 minutes</li>
+                            <li>Enable <code>setDevelopmentMode(true)</code> during testing to avoid API rate limits</li>
+                            <li>Use <code>clearCache()</code> sparingly - let the automatic cache work</li>
+                        </ul>
+                    </div>
+
+                    <h3>3. Network Configuration</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>JavaScript - Multi-network support</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code class="language-javascript">// Allow users to switch networks
+function switchNetwork(networkName) {
+    AdiParse.setNetwork(networkName); // "mainnet", "kermit", "fozzie"
+
+    // URLs automatically update
+    const url = AdiParse.getBankOnLedgerUrl("sunstream.acme");
+    // Mainnet: https://sunstream.BankOnLedger.com/?current-network=mainnet
+    // Kermit:  https://sunstream.BankOnLedger.com/?current-network=kermit
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Troubleshooting Section -->
+                <div class="content-section" id="troubleshooting">
+                    <h2><i class="fas fa-wrench"></i> Troubleshooting</h2>
+
+                    <h3>Common Issues and Solutions</h3>
+
+                    <div class="info-box warning">
+                        <strong>❌ Problem: "AdiParse is not defined"</strong>
+                        <p><strong>Solution:</strong> Make sure <code>operateIdAssembly.js</code> is loaded before your script. Move your code inside a <code>window.onload</code> or <code>DOMContentLoaded</code> handler.</p>
+                    </div>
+
+                    <div class="info-box warning">
+                        <strong>❌ Problem: API returns null or undefined</strong>
+                        <p><strong>Solution:</strong></p>
+                        <ul class="mb-0">
+                            <li>Enable debug mode: <code>AdiParse.setDebugMode(true)</code></li>
+                            <li>Check browser console for API errors</li>
+                            <li>Verify API URL is correct</li>
+                            <li>Check CORS settings on your API server</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box warning">
+                        <strong>❌ Problem: Special characters (�) in description</strong>
+                        <p><strong>Solution:</strong> Already handled! The library automatically cleans problematic characters using <code>_cleanText()</code> method.</p>
+                    </div>
+
+                    <h3>Debug Logging</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>JavaScript - Enable comprehensive logging</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><code class="language-javascript">// Enable debug mode
+AdiParse.setDebugMode(true);
+
+// You'll see detailed logs like:
+// [QobotoApiService] Fetching Qoboto data from: https://...
+// [QobotoApiService] Response type: object
+// [QobotoApiService] Response is array: true
+// [QobotoApiService] Found main section: {...}
+// [QobotoApiService] getLogoUrl for sunstream.acme: https://...</code></pre>
+                    </div>
+                </div>
+
+                <!-- Live Demo Section -->
+                <div class="live-demo">
+                    <h4><i class="fas fa-play-circle"></i> Interactive Live Demo</h4>
+                    <p>Test the API right here in your browser:</p>
+
+                    <div class="demo-input">
+                        <label><strong>Identity URL:</strong></label>
+                        <input type="text" id="demo-identity" value="sunstream.acme" placeholder="Enter identity URL">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="runLiveDemo()">
+                        <i class="fas fa-rocket"></i> Fetch & Display Data
+                    </button>
+
+                    <div class="demo-output" id="demo-output">
+                        <em>Results will appear here...</em>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Prism.js for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+
+    <!-- Load OperateID Assembly for live demo -->
+    <script src="src/js/operateIdAssembly.js"></script>
+
+    <script>
+        // Copy code functionality
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block').querySelector('code');
+            const text = codeBlock.textContent;
+
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.background = 'rgba(16, 185, 129, 0.3)';
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+            });
+        }
+
+        // Live demo function
+        async function runLiveDemo() {
+            const identityUrl = document.getElementById('demo-identity').value;
+            const output = document.getElementById('demo-output');
+
+            output.innerHTML = '<div style="text-align:center;padding:20px;"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+
+            try {
+                // Configure
+                AdiParse.setDevelopmentMode(true); // Use mock data for demo
+                AdiParse.setDebugMode(true);
+
+                // Fetch all data
+                const data = await AdiParse.getAllMainData(identityUrl);
+                const bankUrl = AdiParse.getBankOnLedgerUrl(identityUrl);
+                const qobotoUrl = AdiParse.getQobotoUrl(identityUrl);
+
+                // Display results
+                output.innerHTML = `
+                    <div style="text-align:left;">
+                        <h6 style="color:#4F46E5;margin-bottom:10px;"><i class="fas fa-check-circle"></i> Success!</h6>
+                        <p><strong>Logo URL:</strong><br><code style="font-size:0.85rem;">${data.logoUrl}</code></p>
+                        <p><strong>Description:</strong><br>${data.sectionMain1Description}</p>
+                        <p><strong>Background Image:</strong><br><code style="font-size:0.85rem;">${data.sectionMain1Background2ImageUrl}</code></p>
+                        <p><strong>BankOnLedger URL:</strong><br><a href="${bankUrl}" target="_blank">${bankUrl}</a></p>
+                        <p><strong>Qoboto URL:</strong><br><a href="${qobotoUrl}" target="_blank">${qobotoUrl}</a></p>
+                        <p style="margin:0;"><em style="color:#6B7280;">Check browser console (F12) for detailed debug logs</em></p>
+                    </div>
+                `;
+            } catch (error) {
+                output.innerHTML = `
+                    <div style="color:#DC2626;padding:15px;background:#FEE2E2;border-radius:5px;">
+                        <strong><i class="fas fa-exclamation-circle"></i> Error:</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize Prism syntax highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Prism !== 'undefined') {
+                Prism.highlightAll();
+            }
+        });
+    </script>
+</body>
+</html>
